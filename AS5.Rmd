@@ -1,0 +1,44 @@
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r library}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+```
+
+#### a)
+
+```{r}
+table1 <- readRDS("table1.Rds")
+table1 %>% 
+  pivot_longer(
+    -Wetterstation,names_to = "Tag", 
+    values_to = "frequency") %>%
+  mutate(Tag = as.integer(gsub("Tag","",Tag)))
+```
+#### b)
+
+```{r}
+table2 <- readRDS("table2.Rds")
+table2 %>% 
+  pivot_longer(-Hauptfach, names_to = "year", values_to = "Studenten") %>%
+  separate(year, c("Geschlecht","Jahr"),1)
+```
+
+#### c)
+
+```{r}
+table3 <- readRDS("table3.Rds")
+table3 %>%
+  pivot_longer(-c(Landkreis,Kategorie), 
+               names_to = "Woche", 
+               values_to = "Patient",
+               values_drop_na = TRUE) %>%
+  mutate(Woche = as.integer(gsub("KW","",Woche))) %>% 
+  pivot_wider(names_from = Kategorie, values_from = Patient)
+```
+
